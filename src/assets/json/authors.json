@@ -1,7 +1,7 @@
 [
   {
     "id": 1,
-    "name": "Jane Austen",
+    "name": "Jane Austen", 
     "birthYear": 1775,
     "genres": ["Romance", "Social commentary"],
     "famousWorks": [
