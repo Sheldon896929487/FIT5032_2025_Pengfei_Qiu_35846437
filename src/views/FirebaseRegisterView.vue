@@ -25,11 +25,11 @@ const auth = getAuth()
 const register = () => {
     createUserWithEmailAndPassword(auth, email.value, password.value)
     .then(()=>{
-        console.log("Firebase Register Sucessful!")
+        console.log("Firebase Register Sucessful!")   
         // 保存角色到用户profile
         updateProfile(auth.currentUser, { displayName: role.value }).then(() => {
             console.log("角色已保存:", role.value)
-            router.push("/FireLogin")
+        router.push("/FireLogin")
         })
     }).catch((error)=> {
         console.log(error.code);

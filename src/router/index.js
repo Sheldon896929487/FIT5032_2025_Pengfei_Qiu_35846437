@@ -8,9 +8,26 @@ import FirebaseSigninView from '@/views/FirebaseSigninView.vue'
 import FirebaseRegisterView from '@/views/FirebaseRegisterView.vue'
 import AddBookView from '@/views/AddBookView.vue'
 import AdvancedBookQuery from '@/components/AdvancedBookQuery.vue'
-
+import WeatherView from '../views/WeatherView.vue'
+import CountBookAPI from '../views/CountBookAPI.vue'
+import GetAllBookAPI from '../views/GetAllBookAPI.vue'
 
 const routes = [
+  {
+    path: '/GetAllBookAPI',
+    name: 'GetAllBookAPI',
+    component: GetAllBookAPI
+  },
+  {
+    path: '/CountBookAPI',
+    name: 'CountBookAPI',
+    component: CountBookAPI
+  },
+  {
+    path: '/WeatherCheck',
+    name: 'WeatherCheck',
+    component: WeatherView
+  },
   {
     path: '/FireLogin',
     name: 'FireLogin',
