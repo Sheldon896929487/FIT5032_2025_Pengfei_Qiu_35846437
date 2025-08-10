@@ -15,6 +15,10 @@
             <br>
             <br>
         </div>
+        <!-- Error message display -->
+        <div v-if="error" class="error-message">
+            {{ error }}
+        </div>
     </div>
 
 
@@ -58,6 +62,7 @@
         weatherData: null,
         hourlyForecast: [],
         dailyForecast: [],
+        error: "",
       };
     },
     //computed is a property that is used to define a property that 
@@ -78,7 +83,7 @@
       //Get the current weather icon using the API link
       iconUrl() {
         return this.weatherData
-          ? `http://api.openweathermap.org/img/w/${this.weatherData.weather[0].icon}.png`
+          ? `https://api.openweathermap.org/img/w/${this.weatherData.weather[0].icon}.png`
           : null;
       },
     },
@@ -98,29 +103,124 @@
           navigator.geolocation.getCurrentPosition(async (position) => {
             const { latitude, longitude } = position.coords;
             //API link to obtain the current weather based on the current location browser identified 
-            const url = `http://api.openweathermap.org/data/2.5/weather?lat=${latitude}&lon=${longitude}&appid=${apikey}`;
+            const url = `https://api.openweathermap.org/data/2.5/weather?lat=${latitude}&lon=${longitude}&appid=${apikey}`;
             //await means wait for the fetchWeatherData method to complete before proceeding
             await this.fetchWeatherData(url);
+          }, (error) => {
+            console.error("Geolocation error:", error);
           });
         }
       },
       async fetchWeatherData(url) {
         try {
+          this.error = ""; // Clear previous errors
           const response = await axios.get(url);
           //Returned data from API is stored as JSON file in weatherData
           this.weatherData = response.data;
         } catch (error) {
           console.error("Error fetching weather data:", error);
+          this.error = "Error fetching weather data. Please try again.";
         }
       },
       async searchByCity() {
         if (!this.city.trim()) {
+          this.error = "Please enter a city name.";
           return;
         }
         
-        const url = `http://api.openweathermap.org/data/2.5/weather?q=${encodeURIComponent(this.city)}&appid=${apikey}`;
-        await this.fetchWeatherData(url);
+        try {
+          this.error = "";
+          const url = `https://api.openweathermap.org/data/2.5/weather?q=${encodeURIComponent(this.city)}&appid=${apikey}`;
+          await this.fetchWeatherData(url);
+        } catch (error) {
+          console.error("Error searching by city:", error);
+          this.error = "City not found. Please check the spelling and try again.";
+        }
       }
     }
   }
 </script>
+
+<style scoped>
+.container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px;
+  font-family: Arial, sans-serif;
+}
+
+.header {
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.header h1 {
+  color: #333;
+  margin-bottom: 20px;
+}
+
+.search-bar {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.search-input {
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  width: 200px;
+  font-size: 16px;
+}
+
+.search-button {
+  padding: 10px 20px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+.search-button:hover {
+  background-color: #0056b3;
+}
+
+.error-message {
+  background-color: #f8d7da;
+  color: #721c24;
+  padding: 10px;
+  border-radius: 5px;
+  margin: 10px 0;
+  text-align: center;
+}
+
+main {
+  text-align: center;
+}
+
+main h2 {
+  color: #333;
+  margin-bottom: 20px;
+}
+
+main img {
+  width: 100px;
+  height: 100px;
+}
+
+main p {
+  font-size: 24px;
+  font-weight: bold;
+  color: #333;
+  margin: 10px 0;
+}
+
+main span {
+  font-size: 18px;
+  color: #666;
+}
+</style>
